@@ -8,6 +8,8 @@ class matrix{ double **mat;
               matrix (matrix & a);
               ~ matrix ();
               double &at(int i, int j);
+              double * operator [] (int i);
+              bool operator == (matrix & m_0);
               int width();
               int heigth();
               matrix operator ~ ();
@@ -16,8 +18,6 @@ class matrix{ double **mat;
               matrix & operator = (const matrix & m_0);
               matrix & operator += (matrix & m_0);
               matrix & operator -= (matrix & m_0);
-              bool operator == (matrix & m_0);
-              double * operator [] (int i);
               friend ostream& operator << (ostream & out, matrix & m_str);
               friend istream& operator >> (istream & in, matrix & m_str);
             };
@@ -49,8 +49,8 @@ matrix::matrix (matrix & m_0){ wid=m_0.wid;
                              }
 
 matrix matrix::operator ~ (){ matrix answer;
-                              answer.hei=w;
-                              answer.wid=h;
+                              answer.hei=wid;
+                              answer.wid=hei;
                               answer.mat=(double **)malloc((answer.hei+1)*sizeof(double*));
                               for (int i=1; i<=answer.hei; i++) *(answer.mat+i)=(double *)malloc((answer.wid+1)*sizeof(double));
                               for (int i=1; i<=answer.hei; i++) for (int j=1; j<=answer.wid; j++) answer.mat[i][j]=mat[j][i];
