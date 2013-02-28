@@ -22,10 +22,24 @@ class matrix{ double **mat;
               friend istream& operator >> (istream & in, matrix & m_str);
             };
 
+
+double & matrix::at(int i, int j){return mat[i][j];}
+
+double * matrix::operator [] (int i){ return mat[i];}
+
+int matrix::width(){return wid;}
+
+int matrix::heigth(){return hei;}
+
 matrix::matrix (){ wid=0;
                    hei=0;
                    mat=NULL;
                  }
+
+matrix:: ~ matrix (){ if (mat!=NULL)
+                      for (int i=1; i<=hei; i++){ free(mat[i]);}
+                      free(mat);
+                    }
 
 matrix::matrix (matrix & m_0){ wid=m_0.wid;
                                hei=m_0.hei;
@@ -33,17 +47,6 @@ matrix::matrix (matrix & m_0){ wid=m_0.wid;
                                for (int i=1; i<=hei; i++) *(mat+i)=(double *)malloc((wid+1)*sizeof(double));
                                for (int i=1; i<=hei; i++) for (int j=1; j<=wid; j++) mat[i][j]=m_0.mat[i][j];
                              }
-
-matrix:: ~ matrix (){ if (mat!=NULL)
-                      for (int i=1; i<=hei; i++){ free(mat[i]);}
-                      free(mat);
-                    }
-
-double & matrix::at(int i, int j){return mat[i][j];}
-
-int matrix::width(){return wid;}
-
-int matrix::heigth(){return hei;}
 
 matrix matrix::operator ~ (){ matrix answer;
                               answer.hei=w;
@@ -100,8 +103,6 @@ bool matrix::operator == (matrix & m_0) { bool eqal=true;
                                           if (eqal){ for (int i=1; i<=hei; i++) for (int j=1; j<=wid; j++) eqal=eqal&&(mat[i][j]==m_0.mat[i][j]);}
                                           return eqal;
                                         }
-
-double * matrix::operator [] (int i){ return mat[i];}
 
 ostream & operator << (ostream & out, matrix & m_str){ for (int i=1; i<=m_str.hei; i++){ for (int j=1; j<=m_str.wid; j++)out << m_str.mat[i][j] <<' ';
                                                                                          out << endl;
