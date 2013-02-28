@@ -1,0 +1,126 @@
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+class matrix{ double **mat;
+              int wid, hei;
+      public: matrix ();
+              matrix (matrix & a);
+              ~ matrix ();
+              double &at(int i, int j);
+              int width();
+              int heigth();
+              matrix operator ~ ();
+              matrix operator + (const matrix & m_0);
+              matrix operator - (const matrix & m_0);
+              matrix & operator = (const matrix & m_0);
+              matrix & operator += (matrix & m_0);
+              matrix & operator -= (matrix & m_0);
+              bool operator == (matrix & m_0);
+              double * operator [] (int i);
+              friend ostream& operator << (ostream & out, matrix & m_str);
+              friend istream& operator >> (istream & in, matrix & m_str);
+            };
+
+matrix::matrix (){ wid=0;
+                   hei=0;
+                   mat=NULL;
+                 }
+
+matrix::matrix (matrix & m_0){ wid=m_0.wid;
+                               hei=m_0.hei;
+                               mat=(double **)malloc((hei+1)*sizeof(double*));
+                               for (int i=1; i<=hei; i++) *(mat+i)=(double *)malloc((wid+1)*sizeof(double));
+                               for (int i=1; i<=hei; i++) for (int j=1; j<=wid; j++) mat[i][j]=m_0.mat[i][j];
+                             }
+
+matrix:: ~ matrix (){ if (mat!=NULL)
+                      for (int i=1; i<=hei; i++){ free(mat[i]);}
+                      free(mat);
+                    }
+
+double & matrix::at(int i, int j){return mat[i][j];}
+
+int matrix::width(){return wid;}
+
+int matrix::heigth(){return hei;}
+
+matrix matrix::operator ~ (){ matrix answer;
+                              answer.hei=w;
+                              answer.wid=h;
+                              answer.mat=(double **)malloc((answer.hei+1)*sizeof(double*));
+                              for (int i=1; i<=answer.hei; i++) *(answer.mat+i)=(double *)malloc((answer.wid+1)*sizeof(double));
+                              for (int i=1; i<=answer.hei; i++) for (int j=1; j<=answer.wid; j++) answer.mat[i][j]=mat[j][i];
+                              return answer;
+                            }
+
+matrix matrix::operator + (const matrix & m_0){ matrix answer;
+                                                answer.wid=wid;
+                                                answer.hei=hei;
+                                                answer.mat=(double **)malloc((hei+1)*sizeof(double*));
+                                                for (int i=1; i<=wid; i++) *(answer.mat+i)=(double *)malloc((wid+1)*sizeof(double));
+                                                for (int i=1; i<=hei; i++) for (int j=1; j<=wid; j++) answer.mat[i][j]=mat[i][j]+m_0.mat[i][j];
+                                                return answer;
+                                              }
+
+matrix matrix::operator - (const matrix & m_0){ matrix answer;
+                                                answer.wid=wid;
+                                                answer.hei=hei;
+                                                answer.mat=(double **)malloc((hei+1)*sizeof(double*));
+                                                for (int i=1; i<=wid; i++){*(answer.mat+i)=(double *)malloc((wid+1)*sizeof(double));}
+                                                for (int i=1; i<=wid; i++) for (int j=1; j<=hei; j++) answer.mat[i][j]=mat[i][j]-m_0.mat[i][j];
+                                                return answer;
+                                              }
+
+matrix & matrix::operator = (const matrix & m_0){ if (mat!=NULL){ for (int i=1; i<=hei; i++){ free(mat[i]);}
+                                                                  free(mat);
+                                                                }
+                                                  wid=m_0.wid;
+                                                  hei=m_0.hei;
+                                                  mat=(double **)malloc((hei+1)*sizeof(double*));
+                                                  for (int i=1; i<=hei; i++) *(mat+i)=(double *)malloc((wid+1)*sizeof(double));
+                                                  for (int i=1; i<=hei; i++) for (int j=1; j<=wid; j++) mat[i][j]=m_0.mat[i][j];
+                                                  return * this;
+                                                }
+
+matrix & matrix::operator -= (matrix & m_0){ mat=(double **)malloc((hei+1)*sizeof(double*));
+                                             for (int i=1; i<=wid; i++) *(mat+i)=(double *)malloc((wid+1)*sizeof(double));
+                                             for (int i=1; i<=hei; i++) for (int j=1; j<=wid; j++) mat[i][j]-=m_0.mat[i][j];
+                                             return * this;
+                                           }
+
+matrix & matrix::operator += (matrix & m_0){ mat=(double **)malloc((hei+1)*sizeof(double*));
+                                             for (int i=1; i<=wid; i++) *(mat+i)=(double *)malloc((wid+1)*sizeof(double));
+                                             for (int i=1; i<=hei; i++) for (int j=1; j<=wid; j++) mat[i][j]+=m_0.mat[i][j];
+                                             return *this;
+                                           }
+
+bool matrix::operator == (matrix & m_0) { bool eqal=true;
+                                          eqal=(wid==m_0.wid)&&(hei==m_0.hei);
+                                          if (eqal){ for (int i=1; i<=hei; i++) for (int j=1; j<=wid; j++) eqal=eqal&&(mat[i][j]==m_0.mat[i][j]);}
+                                          return eqal;
+                                        }
+
+double * matrix::operator [] (int i){ return mat[i];}
+
+ostream & operator << (ostream & out, matrix & m_str){ for (int i=1; i<=m_str.hei; i++){ for (int j=1; j<=m_str.wid; j++)out << m_str.mat[i][j] <<' ';
+                                                                                         out << endl;
+                                                                                       }
+                                                       out << endl;
+                                                       return out;
+                                                     }
+
+istream & operator >> (istream & in, matrix & m_str){ in >> m_str.hei;
+                                                      in >> m_str.wid;
+                                                      m_str.mat=(double **)malloc((m_str.hei+1)*sizeof(double*));
+                                                      for (int i=1; i<=m_str.hei; i++) *(m_str.mat+i)=(double *)malloc((m_str.wid+1)*sizeof(double));
+                                                      for (int i=1; i<=m_str.hei; i++) for (int j=1; j<=m_str.wid; j++) in >> m_str.mat[i][j];
+                                                      return in;
+                                                    }
+
+int main(int argc, const char * argv[]) { matrix m_1, m_2, m_3;
+                                          cin >> m_1;
+                                          cin >> m_2;
+                                          m_3= m_1 + ~ m_2;
+                                          cout << m_3;
+                                        }
